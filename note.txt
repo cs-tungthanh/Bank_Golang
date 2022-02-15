@@ -1,0 +1,2 @@
+go mod tidy - install all dependencies
+go mod init domain/app
