@@ -15,14 +15,16 @@ const (
 )
 
 var testQueries *Queries
+var testDb *sql.DB
 
 // TestMain func is entry point of all unittests inside a package
 func TestMain(m *testing.M) {
-	conn, err := sql.Open(dbDriver, dbSource)
+	var err error
+	testDb, err = sql.Open(dbDriver, dbSource)
 	if err != nil {
 		log.Fatal("Cannot connect to db", err)
 	}
-	testQueries = New(conn)
+	testQueries = New(testDb)
 
 	// to start running the unit test
 	os.Exit(m.Run())
