@@ -26,3 +26,13 @@ func TestAdd(t *testing.T){
     }
 }
 ```
+
+
+## Deadlock in Database
+Because there is Key constrain between accounts and transfer table
+so we need to add keyword: FOR NO KEY UPDATE; in statement sql to prevent deadlock  
+
+add txName to the context: 			
+`ctx := context.WithValue(context.Background(), txKey, txtName)`
+get txName from the context:
+`txName := ctx.Value(txKey)`

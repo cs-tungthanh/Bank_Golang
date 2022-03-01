@@ -54,12 +54,18 @@ type TransferTxResult struct {
 	ToEntry     Entry    `json:"to_entry"`
 }
 
+// txKey: used for debuging deadlock in database [1]
+// var txKey = struct{}{}
+
 // transferTx performs a money transfer from one account to the other.
 // It creates a transfer record, add account entries, update accounts's balance within a single database transaction.
 func (store *Store) transferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error) {
 	var result TransferTxResult
 	err := store.execTx(ctx, func(q *Queries) error {
 		var err error
+
+		// txName := ctx.Value(txKey) // [1]
+		// fmt.Println(txName, "create transfer")
 		result.Transfer, err = q.CreateTransfer(ctx, CreateTransferParams{
 			FromAccountID: arg.FromAccountID,
 			ToAccountID:   arg.ToAccountID,
@@ -69,6 +75,7 @@ func (store *Store) transferTx(ctx context.Context, arg TransferTxParams) (Trans
 			return err
 		}
 
+		// fmt.Println(txName, "create entry1")
 		result.FromEntry, err = q.CreateEntry(ctx, CreateEntryParams{
 			AccountID: arg.FromAccountID,
 			Amount:    -arg.Amount,
@@ -77,6 +84,7 @@ func (store *Store) transferTx(ctx context.Context, arg TransferTxParams) (Trans
 			return nil
 		}
 
+		// fmt.Println(txName, "create entry2")
 		result.ToEntry, err = q.CreateEntry(ctx, CreateEntryParams{
 			AccountID: arg.ToAccountID,
 			Amount:    +arg.Amount,
@@ -85,7 +93,23 @@ func (store *Store) transferTx(ctx context.Context, arg TransferTxParams) (Trans
 			return nil
 		}
 
-		// TODO: update account's balance
+		// get account -> update it's balance
+		result.FromAccount, err = q.AddAccountBalance(ctx, AddAccountBalanceParams{
+			ID:     arg.FromAccountID,
+			Amount: -arg.Amount,
+		})
+		if err != nil {
+			return err
+		}
+
+		result.ToAccount, err = q.AddAccountBalance(ctx, AddAccountBalanceParams{
+			ID:     arg.ToAccountID,
+			Amount: arg.Amount,
+		})
+		if err != nil {
+			return err
+		}
+
 		return nil
 	})
 	return result, err
