@@ -6,12 +6,8 @@ import (
 	"os"
 	"testing"
 
+	"github.com/cs-tungthanh/Bank_Golang/util"
 	_ "github.com/lib/pq"
-)
-
-const (
-	dbDriver = "postgres"
-	dbSource = "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable"
 )
 
 var testQueries *Queries
@@ -19,10 +15,13 @@ var testDb *sql.DB
 
 // TestMain func is entry point of all unittests inside a package
 func TestMain(m *testing.M) {
-	var err error
-	testDb, err = sql.Open(dbDriver, dbSource)
+	config, err := util.LoadConfig("../../")
 	if err != nil {
-		log.Fatal("Cannot connect to db", err)
+		log.Fatal("cannot load config file:", err)
+	}
+	testDb, err = sql.Open(config.DBDriver, config.DBSource)
+	if err != nil {
+		log.Fatal("cannot connect to db:", err)
 	}
 	testQueries = New(testDb)
 
