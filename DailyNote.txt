@@ -15,3 +15,7 @@ export PATH=$PATH:~/go/bin
 
 mockgen pathToModule/db/sqc InterfaceName
 Example: mockgen -package mockdb -destination db/mock/store.go github.com/cs-tungthanh/Bank_Golang/db/sqlc Store                                               ✔ 13:19:03
+
+transform this test into a table-driven test set
+    to cover all possible scenarios of the GetAccountAPI to get 100% coverage
+    
