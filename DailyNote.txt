@@ -10,6 +10,7 @@ Why mock database?
      
 How: using stubs instead of fake db
     - fake db(implement a fake version of DB)
+-> Using Gomock to mock db
 
 export PATH=$PATH:~/go/bin
 
@@ -18,4 +19,3 @@ Example: mockgen -package mockdb -destination db/mock/store.go github.com/cs-tun
 
 transform this test into a table-driven test set
     to cover all possible scenarios of the GetAccountAPI to get 100% coverage
-    
