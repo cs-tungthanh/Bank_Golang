@@ -35,5 +35,45 @@ Indexing to the DB:
 
 ![Database graph](./doc/Simple_Bank.png)
 
+```bash
+docker exec -it container-name bash
+psql -U root -d simple_bank
+```
+
+**Transaction**: bundles multi-steps into a single.
+
+Benefits:
+- Make sure Data Integrity
+
+```sql
+BEGIN;
+UPDATE Table1 ... WHERE name = 'Alice';
+SAVEPOINT my_savepoint_label;
+UPDATE Table2 ... WHERE name = 'Bob';
+-- oops ... forget that and use Wally's account
+ROLLBACK TO my_savepoint_label;
+UPDATE ... WHERE name = 'Wally';
+COMMIT;
+```
+
+
+```sql
+BEGIN;
+
+INSERT INTO transfers (from_account_id, to_account_id, amount) VALUES (6,7,10) RETURNING *;
+
+INSERT INTO entries (account_id, amount) VALUES (6, -10) RETURNING *;
+INSERT INTO entries (account_id, amount) VALUES (7, 10) RETURNING *;
+
+SELECT * FROM accounts WHERE id = 6 FOR UPDATE;
+UPDATE accounts SET balance=689 WHERE id=6 RETURNING *;
+
+SELECT * FROM accounts WHERE id = 7 FOR UPDATE;
+UPDATE accounts SET balance=791 WHERE id=7 RETURNING *;
+
+ROLLBACK;
+```
+
+
 # References
 - https://github.com/golang-migrate/migrate#cli-usage
