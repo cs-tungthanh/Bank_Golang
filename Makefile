@@ -1,3 +1,6 @@
+createNetwork:
+	docker network create bank-network
+
 postgres:
 	docker-compose up -d
 
@@ -28,6 +31,19 @@ test:
 
 server:
 	go run main.go
+
+dockerbuild:
+	docker build -t simplebank:latest .
+
+
+#  because we have postgres12 in the same network so hostname can use as the container name in DB_SOURCE
+dockerrun:
+	docker run --name simplebank \
+		-p 8080:8080 \
+		--network bank-network \
+		-e GIN_MODE=release \
+		-e DB_SOURCE="postgresql://root:secret@postgres12:5432/simple_bank?sslmode=disable" \
+		simplebank:latest
 
 mock:
 	mockgen -package mockdb -destination db/mock/store.go github.com/cs-tungthanh/Bank_Golang/db/sqlc Store      
