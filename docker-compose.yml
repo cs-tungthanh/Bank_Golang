@@ -1,5 +1,10 @@
 version: '3'
 
+# need to create network first: docker network create bank-network
+networks:
+    bank-network:
+        external: true
+
 services:
   db:
     container_name: postgres12
@@ -10,3 +15,5 @@ services:
       - POSTGRES_PASSWORD=secret
     ports:
       - 5432:5432
+    networks: # attach this container to this network
+      - bank-network
