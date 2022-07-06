@@ -1,12 +1,23 @@
 version: '3'
 
 services:
-  db:
-    container_name: postgres12
+  postgres:
     image: postgres:12-alpine
-    restart: always
     environment:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=simple_bank
+    restart: always
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - 5432:5432
+      - 8080:8080
+    environment:
+      - DB_SOURCE=postgresql://root:secret@postgres:5432/simple_bank?sslmode=disable
+    depends_on:
+      - postgres
+    entrypoint: [ "/app/wait-for.sh", "postgres:5432", "--", "/app/start.sh" ]
+    command: ["/app/main"]

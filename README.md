@@ -74,6 +74,35 @@ UPDATE accounts SET balance=791 WHERE id=7 RETURNING *;
 ROLLBACK;
 ```
 
+## Docker
+`docker container inspect postgres12`: to see the network setting
+- check NetworkSetting/IPAddress
+
+```bash
+docker network ls
+docker network create network-name
+
+# to list all containers are running in this network
+docker network inspect network-name
+
+# Manual connect: 
+docker network connect network-name container
+```
+
+- If you have more than 2 containers with non-defined network, it will run in different networks.
+- That means each container will run with different IPAddress and cannot connect to each other.
+- so we are supposed to attach this container to the same network.
+- if all services are defined in the same file docker-compose, it has the same network
+- the network is just need when we run seperately container
+networks
+### Tech
+- need to create network first: docker network create bank-network
+```
+networks:
+  bank-network:
+    external: true
+```
+
 
 # References
 - https://github.com/golang-migrate/migrate#cli-usage
