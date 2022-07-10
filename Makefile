@@ -1,7 +1,7 @@
 createNetwork:
 	docker network create bank-network
 
-postgres:
+run:
 	docker-compose up -d
 
 createdb:
