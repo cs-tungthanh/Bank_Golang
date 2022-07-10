@@ -10,11 +10,9 @@ createdb:
 dropdb:
 	docker exec -it postgres12 dropdb simple_bank
 
+# modify localhost to db'hostname and password to access to db
 migrateup:
 	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable" -verbose up
-
-migrateup-aws:
-	migrate -path db/migration -database "postgresql://root:d6JYHNLj2RgajRHxZykn@simple-bank-1.caypvmpdykge.ap-southeast-1.rds.amazonaws.com:5432/simple_bank" -verbose up
 
 migrateup1:
 	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable" -verbose up 1
