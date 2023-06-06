@@ -36,7 +36,6 @@ func TestGetACcountAPI(t *testing.T) {
 					Return(account, nil)
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
-				//check response
 				require.Equal(t, http.StatusOK, recorder.Code)
 				requireBodyMatchAccount(t, recorder.Body, account)
 			},
@@ -51,7 +50,6 @@ func TestGetACcountAPI(t *testing.T) {
 					Return(db.Account{}, sql.ErrNoRows)
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
-				//check response
 				require.Equal(t, http.StatusNotFound, recorder.Code)
 			},
 		},
@@ -65,7 +63,6 @@ func TestGetACcountAPI(t *testing.T) {
 					Return(db.Account{}, sql.ErrConnDone)
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
-				//check response
 				require.Equal(t, http.StatusInternalServerError, recorder.Code)
 			},
 		},
@@ -78,7 +75,6 @@ func TestGetACcountAPI(t *testing.T) {
 					Times(0)
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
-				//check response
 				require.Equal(t, http.StatusBadRequest, recorder.Code)
 			},
 		},

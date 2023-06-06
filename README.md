@@ -16,6 +16,30 @@ Example:
 migrate create -ext sql -dir db/migration -seq init_schema
 ```
 
+## 2. Install mockgen
+Go 1.16+
+```
+go install github.com/golang/mock/mockgen@v1.6.0
+export PATH=$PATH:~/go/bin
+```
+
+Why mock database?
+- independent test: avoid conflicts with real data
+- faster test:
+    we don't need to talk to the database
+    all actions will be performed in memory, on the same process
+- 100% coverage
+    easily setup edge cases: unexpected errors or connection lost
+     
+How: using stubs instead of fake db
+    - fake db(implement a fake version of DB)
+-> Using Gomock to mock db
+
+```
+mockgen pathToModule/db/sqlc InterfaceName
+Example: mockgen -package mockdb -destination db/mock/store.go github.com/cs-tungthanh/Bank_Golang/db/sqlc store
+```
+
 # Stages
 ## 1. Design Database Schema
 https://dbdiagram.io/d/6208c1dd85022f4ee584df9c
