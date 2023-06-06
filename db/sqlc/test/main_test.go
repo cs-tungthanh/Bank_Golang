@@ -1,4 +1,4 @@
-package db
+package sqlc_test
 
 import (
 	"database/sql"
@@ -6,16 +6,17 @@ import (
 	"os"
 	"testing"
 
+	db "github.com/cs-tungthanh/Bank_Golang/db/sqlc"
 	"github.com/cs-tungthanh/Bank_Golang/util"
 	_ "github.com/lib/pq"
 )
 
-var testQueries *Queries
+var testQueries *db.Queries
 var testDb *sql.DB
 
 // TestMain func is entry point of all unittests inside a package
 func TestMain(m *testing.M) {
-	config, err := util.LoadConfig("../../")
+	config, err := util.LoadConfig("../../../")
 	if err != nil {
 		log.Fatal("cannot load config file:", err)
 	}
@@ -23,7 +24,7 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		log.Fatal("cannot connect to db:", err)
 	}
-	testQueries = New(testDb)
+	testQueries = db.New(testDb)
 
 	// to start running the unit test
 	os.Exit(m.Run())

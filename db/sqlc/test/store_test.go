@@ -1,14 +1,15 @@
-package db
+package sqlc_test
 
 import (
 	"context"
 	"testing"
 
+	db "github.com/cs-tungthanh/Bank_Golang/db/sqlc"
 	"github.com/stretchr/testify/require"
 )
 
 func TestTransferTx(t *testing.T) {
-	store := NewStore(testDb)
+	store := db.NewStore(testDb)
 	account1 := createRandomAccount(t)
 	account2 := createRandomAccount(t)
 
@@ -17,13 +18,13 @@ func TestTransferTx(t *testing.T) {
 	amount := int64(10)
 
 	errs := make(chan error)
-	results := make(chan TransferTxResult)
+	results := make(chan db.TransferTxResult)
 
 	for i := 0; i < n; i++ {
 		// txtName := fmt.Sprintf("tx %d", i)
 		go func() {
 			// ctx := context.WithValue(context.Background(), txKey, txtName)
-			result, err := store.TransferTx(context.Background(), TransferTxParams{
+			result, err := store.TransferTx(context.Background(), db.TransferTxParams{
 				FromAccountID: account1.ID,
 				ToAccountID:   account2.ID,
 				Amount:        amount,
@@ -108,7 +109,7 @@ func TestTransferTx(t *testing.T) {
 }
 
 func TestTransferTxDeadLock(t *testing.T) {
-	store := NewStore(testDb)
+	store := db.NewStore(testDb)
 	account1 := createRandomAccount(t)
 	account2 := createRandomAccount(t)
 
@@ -129,7 +130,7 @@ func TestTransferTxDeadLock(t *testing.T) {
 			toAccountID = account1.ID
 		}
 		go func() {
-			_, err := store.TransferTx(context.Background(), TransferTxParams{
+			_, err := store.TransferTx(context.Background(), db.TransferTxParams{
 				FromAccountID: fromAccountID,
 				ToAccountID:   toAccountID,
 				Amount:        amount,

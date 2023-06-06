@@ -1,19 +1,20 @@
-package db
+package sqlc_test
 
 import (
 	"context"
 	"testing"
 	"time"
 
+	db "github.com/cs-tungthanh/Bank_Golang/db/sqlc"
 	"github.com/cs-tungthanh/Bank_Golang/util"
 	"github.com/stretchr/testify/require"
 )
 
-func createRandomUser(t *testing.T) User {
+func createRandomUser(t *testing.T) db.User {
 	hashedPassword, err := util.HashPassword(util.RandomString(6))
 	require.NoError(t, err)
 
-	arg := CreateUserParams{
+	arg := db.CreateUserParams{
 		Username:       util.RandomOwner(),
 		HashedPassword: hashedPassword,
 		FullName:       util.RandomOwner(),
