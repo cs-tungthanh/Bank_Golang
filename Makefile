@@ -4,6 +4,15 @@ createNetwork:
 run:
 	docker-compose up -d
 
+postgres:
+	docker run -d \
+		-e POSTGRES_USER=root \
+		-e POSTGRES_PASSWORD=secret \
+		-e POSTGRES_DB=simple_bank \
+		-p 5432:5432 \
+		--name postgres12 \
+		postgres:12-alpine 
+
 createdb:
 	docker exec -it postgres12 createdb --username=root --owner=root simple_bank
 
