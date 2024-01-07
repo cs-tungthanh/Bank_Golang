@@ -1,8 +1,13 @@
 # Bank-Golang
 This project I used for learning Go and other techniques to improve my skills.
 
+# Dependencies
+- golang-migrate
+- sqlc: v1.25.0
+- mockgen
+
 # Installation
-## 1. Install golang-migrate
+## 1. [Install golang-migrate](https://github.com/golang-migrate/migrate)
 ```
 brew install golang-migrate
 ```
@@ -16,8 +21,12 @@ Example:
 migrate create -ext sql -dir db/migration -seq init_schema
 ```
 
-## 2. Install mockgen
-Go 1.16+
+## 2. [Install sqlc](https://docs.sqlc.dev/en/stable/overview/install.html)
+```
+brew install sqlc
+```
+
+## 3. Install mockgen
 ```
 go install github.com/golang/mock/mockgen@v1.6.0
 export PATH=$PATH:~/go/bin
