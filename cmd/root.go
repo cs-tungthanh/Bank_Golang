@@ -13,11 +13,35 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// db
+var dbCmd = &cobra.Command{
+	Use:   "db",
+	Short: "Database management commands",
+}
+
+// db migrate
+var migrateCmd = &cobra.Command{
+	Use:   "migrate",
+	Short: "Run database migrations",
+	Run: func(cmd *cobra.Command, args []string) {
+	},
+}
+
+var versionCmd = &cobra.Command{
+	Use:   "version",
+	Short: "Print the version number of Simple Bank",
+	Long:  `All software has versions. This is Simple Bank's`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("Simple Bank Application v1.0.0 -- HEAD")
+	},
+}
+
 var rootCmd = &cobra.Command{
 	Use:   "app",
 	Short: "Start service",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("hello", args)
+		fmt.Println("Start service with args:", args)
+
 		config, err := util.LoadConfig(".")
 		if err != nil {
 			log.Fatal("cannot load config: ", err)
@@ -42,10 +66,13 @@ var rootCmd = &cobra.Command{
 }
 
 func Execute() {
-	rootCmd.AddCommand(outEnvCmd)
+	dbCmd.AddCommand(migrateCmd)
+
+	rootCmd.AddCommand(dbCmd)
+	rootCmd.AddCommand(versionCmd)
 
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
+		fmt.Printf("[rootCmd.Execute] error: %v\n", err)
 		os.Exit(1)
 	}
 }
