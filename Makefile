@@ -1,9 +1,14 @@
-.PHONY: help postgres createdb dropdb migratedown migrateup sqlc test server mock
+.PHONY: help postgres createdb dropdb migratedown migrateup sqlc test server mock install-tools
 
 help:
 	@echo "Usage: make [target]"
 	@echo "Targets:"
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
+install-tools: ## Install dev-tools for project
+	go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
+	go install go.uber.org/mock/mockgen@latest
+	go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
 
 createNetwork: ## Create Docker network for the application
 	docker network create bank-network

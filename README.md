@@ -1,6 +1,39 @@
 # Bank-Golang
 This project I used for learning Go and other techniques to improve my skills.
 
+## Table of Contents
+- [Getting Started](#getting-started)
+- [Installation](#installation)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Getting Started
+
+### Installation
+
+Make sure you have the necessary development tools installed. You can do this by running:
+```bash
+make install-tools
+```
+
+### Database Setup
+
+```bash
+make createdb
+```
+
+### Run Migrations
+
+```bash
+make migrateup
+```
+
+### Run Tests
+
+```bash
+make test
+```     
+
 # User Story
 > [detail](./doc/user_story.md)
 
@@ -54,3 +87,5 @@ UPDATE accounts SET balance=791 WHERE id=7 RETURNING *;
 
 ROLLBACK;
 ```
+
+
