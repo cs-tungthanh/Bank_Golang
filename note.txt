@@ -1,6 +1,0 @@
-go mod tidy - install all dependencies
-go mod init domain/app
-Press Control + Shift + P and go to `Go: Install/Update Tools` to install all tools to use
-
-transform this test into a table-driven test set
-    to cover all possible scenarios of the GetAccountAPI to get 100% coverage

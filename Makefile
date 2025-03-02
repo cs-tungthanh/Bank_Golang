@@ -31,16 +31,16 @@ createdb: ## Create a new database
 dropdb: ## Drop the database
 	docker exec -it postgres12 dropdb simple_bank
 
-migrateup: ## Run all up database migrations
+migrate-up: ## Run all up database migrations
 	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable" -verbose up
 
-migrateup1: ## Run one up database migration
+migrate-up1: ## Run one up database migration
 	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable" -verbose up 1
 
-migratedown: ## Run all down database migrations
+migrate-down: ## Run all down database migrations
 	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable" -verbose down
 
-migratedown1: ## Run one down database migration
+migrate-down1: ## Run one down database migration
 	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable" -verbose down 1
 
 sqlc: ## Generate Go code from SQL
@@ -52,10 +52,10 @@ test: ## Run all unit tests
 server: ## Start the application server
 	go run main.go
 
-dockerbuild: ## Build Docker image
+docker-build: ## Build Docker image
 	docker build -t simplebank:latest .
 
-dockerrun: ## Run application in Docker container
+docker-run: ## Run application in Docker container
 	docker run --name simplebank \
 		-p 8080:8080 \
 		--network bank-network \
