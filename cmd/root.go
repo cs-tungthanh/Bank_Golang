@@ -6,9 +6,10 @@ import (
 	"log"
 	"os"
 
-	"github.com/cs-tungthanh/Bank_Golang/api"
+	"github.com/cs-tungthanh/Bank_Golang/composer"
 	db "github.com/cs-tungthanh/Bank_Golang/db/sqlc"
 	"github.com/cs-tungthanh/Bank_Golang/util"
+	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
 	"github.com/spf13/cobra"
 )
@@ -53,16 +54,36 @@ var rootCmd = &cobra.Command{
 		}
 
 		store := db.NewStore(conn)
-		server, err := api.NewServer(config, store)
-		if err != nil {
-			log.Fatal("cannot create server:", err)
-		}
+		router := gin.Default()
+		SetupRoutes(config, store, router)
 
-		err = server.Start(config.ServerAddress)
+		err = router.Run(config.ServerAddress)
 		if err != nil {
 			log.Fatal("Cannot start server:", err)
 		}
 	},
+}
+
+func SetupRoutes(cfg util.Config, store db.Store, router *gin.Engine) {
+	apiService, err := composer.ComposeAPIService(cfg, store)
+	if err != nil {
+		log.Fatal("Cannot create API service:", err)
+	}
+
+	userGroup := router.Group("/users")
+	{
+		userGroup.POST("/", apiService.UserAPI.CreateUser)
+		userGroup.POST("login", apiService.UserAPI.LoginUser)
+	}
+
+	accountGroup := router.Group("/accounts")
+	{
+		accountGroup.POST("/", apiService.AccountAPI.CreateAccount)
+		accountGroup.POST("/transfers", apiService.AccountAPI.CreateTransfer)
+
+		accountGroup.GET("/:id", apiService.AccountAPI.GetAccount)
+		accountGroup.GET("/", apiService.AccountAPI.ListAccount)
+	}
 }
 
 func Execute() {
